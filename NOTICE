@@ -1,0 +1,25 @@
+Superpower Light
+https://github.com/qkrwoghd04/superpower-light
+
+An independently maintained derivative of Superpowers by Jesse Vincent and
+the Superpowers contributors: https://github.com/obra/superpowers
+
+Original software: Copyright (c) 2025 Jesse Vincent, MIT License.
+Modifications: Copyright (c) 2026 qkrwoghd04, MIT License.
+The original copyright and permission notice are preserved in LICENSE.
+
+Source baseline:
+  obra/superpowers commit 2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
+  Upstream package version: 7.0.1
+  https://github.com/obra/superpowers/tree/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
+
+The 64 original skill/resource files were compared byte-for-byte against this
+baseline before modification. Superpower Light revises all 14 skill entrypoints
+and selected references/helpers to make process proportional to uncertainty
+and risk, support uncommitted-change review, and preserve user authorization.
+Public defaults retain project regression tests; temporary artifact cleanup
+follows the user's or project's policy. The optional visual companion uses
+local text branding instead of the upstream remote logo request.
+
+This project is not an official Superpowers release and is not affiliated
+with or endorsed by its original maintainers or any coding-agent provider.

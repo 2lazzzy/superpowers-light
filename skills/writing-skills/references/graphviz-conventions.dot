@@ -1,0 +1,19 @@
+digraph skill_decision_example {
+    rankdir=TB;
+    start [label="Change requested", shape=ellipse];
+    decision [label="Behavior or risk changes?", shape=diamond];
+    focused [label="Check structure and meaning", shape=box];
+    scenario [label="Check representative outcomes", shape=box];
+    sufficient [label="Evidence sufficient?", shape=diamond];
+    refine [label="Resolve the observed gap", shape=box];
+    finish [label="Report changes and limits", shape=doublecircle];
+
+    start -> decision;
+    decision -> scenario [label="yes"];
+    decision -> focused [label="no"];
+    scenario -> sufficient;
+    focused -> sufficient;
+    sufficient -> finish [label="yes"];
+    sufficient -> refine [label="no"];
+    refine -> sufficient;
+}

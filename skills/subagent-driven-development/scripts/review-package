@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+# Build a read-only review snapshot. No staging, commits, checkout, or index refresh.
+# Usage: bash scripts/review-package PLAN_FILE BASE HEAD [OUTFILE]
+#        bash scripts/review-package PLAN_FILE --working-tree BASE [OUTFILE] [-- PATH...]
+# PATH entries are literal repository-relative files/directories. Without them,
+# working-tree mode includes all tracked changes and all nonignored untracked files.
+# Stop writers in the selected scope while producing and reviewing the snapshot.
+set -euo pipefail
+export GIT_OPTIONAL_LOCKS=0
+
+usage() {
+  printf '%s\n' 'usage: review-package PLAN_FILE BASE HEAD [OUTFILE]' \
+    '       review-package PLAN_FILE --working-tree BASE [OUTFILE] [-- PATH...]' >&2
+  exit 2
+}
+[ $# -ge 3 ] || usage
+plan=$1
+[ -f "$plan" ] || { echo "no such plan file: $plan" >&2; exit 2; }
+shift
+mode=commits
+out=''
+reserved_output=0
+scope=()
+pathspecs=()
+if [ "$1" = '--working-tree' ]; then
+  mode=working-tree
+  base=$2
+  shift 2
+  if [ $# -gt 0 ] && [ "$1" != '--' ]; then out=$1; shift; fi
+  if [ $# -gt 0 ]; then
+    [ "$1" = '--' ] || usage
+    shift
+    for item in "$@"; do
+      case "$item" in .|./) item=. ;; esac
+      while [[ "$item" == ./* ]]; do item=${item#./}; done
+      case "$item" in
+        ''|/*|..|../*|*/../*|*/..) echo "scope must stay within the repository: $item" >&2; exit 2 ;;
+      esac
+      scope+=("$item")
+      if [ "$item" = . ]; then pathspecs+=(':(top)'); else pathspecs+=(":(top,literal)$item"); fi
+    done
+  fi
+  head=$(git rev-parse --verify 'HEAD^{commit}')
+else
+  [ $# -ge 2 ] && [ $# -le 3 ] || usage
+  base=$1
+  head=$(git rev-parse --verify --quiet "$2^{commit}") || { echo "bad HEAD: $2" >&2; exit 2; }
+  if [ $# -eq 3 ]; then out=$3; fi
+fi
+base=$(git rev-parse --verify --quiet "$base^{commit}") || { echo 'bad BASE' >&2; exit 2; }
+if [ "$mode" = commits ]; then
+  git merge-base --is-ancestor "$base" "$head" || { echo 'HEAD is not a descendant of BASE' >&2; exit 3; }
+  [ "$(git rev-list --count "$base..$head")" -gt 0 ] || { echo 'empty commit range' >&2; exit 3; }
+fi
+
+root=$(cd "$(git rev-parse --show-toplevel)" && pwd -P)
+# Bash 3.2 with nounset cannot expand an empty array.
+if [ ${#pathspecs[@]} -eq 0 ]; then pathspecs=(':(top)'); fi
+if [ -z "$out" ]; then
+  dir=$(bash "$(cd "$(dirname "$0")" && pwd)/sdd-workspace" "$plan")
+  if [ "$mode" = working-tree ]; then
+    out=$(mktemp "$dir/review-working-tree.XXXXXX")
+    mv -- "$out" "$out.diff"
+    out="$out.diff"
+    reserved_output=1
+  else
+    out="$dir/review-${base:0:7}..${head:0:7}.diff"
+  fi
+fi
+# Resolve before changing directory; caller-relative output paths stay compatible.
+out="$(cd "$(dirname "$out")" && pwd -P)/$(basename "$out")"
+cd "$root"
+# A review artifact must never replace source, follow a symlink, or overwrite an
+# arbitrary existing file. Reusing an explicitly generated package is supported.
+[ ! -L "$out" ] || { echo 'OUTFILE must not be a symlink' >&2; exit 2; }
+case "$out" in
+  "$root"/*)
+    out_rel=${out#"$root"/}
+    if git ls-files --error-unmatch -- ":(literal)$out_rel" >/dev/null 2>&1; then
+      echo 'OUTFILE must not be a tracked file' >&2; exit 2
+    fi
+    pathspecs+=(":(top,exclude,literal)$out_rel")
+    ;;
+esac
+if [ -e "$out" ] && [ "$reserved_output" -eq 0 ]; then
+  [ -f "$out" ] || { echo 'OUTFILE must be a regular review package' >&2; exit 2; }
+  IFS= read -r first_line < "$out" || first_line=''
+  case "$first_line" in
+    '# Review package'|'# Review package: '*) ;;
+    *) echo 'OUTFILE exists and is not a generated review package' >&2; exit 2 ;;
+  esac
+fi
+tmp=$(mktemp "${TMPDIR:-/tmp}/superpowers-review.XXXXXX")
+untracked_list=$(mktemp "${TMPDIR:-/tmp}/superpowers-untracked.XXXXXX")
+trap 'rc=$?; rm -f -- "$tmp" "$untracked_list"; if [ "$rc" -ne 0 ] && [ "$reserved_output" -eq 1 ]; then rm -f -- "$out"; fi; exit "$rc"' EXIT
+if [ "$mode" = working-tree ]; then
+  git ls-files --others --exclude-standard -z -- "${pathspecs[@]}" > "$untracked_list"
+fi
+
+diff() { git --no-pager diff --no-ext-diff --no-textconv --binary -U10 "$@"; }
+{
+  printf '# Review package\n\nMode: %s\nBase: %s\nHead: %s\n' "$mode" "$base" "$head"
+  if [ "$mode" = commits ]; then
+    printf '\n## Commits\n'
+    git log --oneline "$base..$head"
+    printf '\n## Files changed\n'
+    git --no-pager diff --no-ext-diff --no-textconv --stat "$base..$head"
+    printf '\n## Diff\n'
+    diff "$base..$head"
+  else
+    printf '\nScope (literal repository-relative paths):\n'
+    if [ ${#scope[@]} -eq 0 ]; then printf '%s\n' '(whole working tree)'; else printf '%s\n' "${scope[@]}"; fi
+    printf '\n## Status\n'
+    git status --porcelain=v1 -uall -- "${pathspecs[@]}"
+    printf '\n## Final tracked contents relative to base\n'
+    diff "$base" -- "${pathspecs[@]}"
+    printf '\n## Staged changes relative to base\n'
+    diff --cached "$base" -- "${pathspecs[@]}"
+    printf '\n## Unstaged changes relative to index\n'
+    diff -- "${pathspecs[@]}"
+    printf '\n## Untracked files (nonignored)\n'
+    # NUL delimiters preserve spaces, newlines, and shell metacharacters in names.
+    while IFS= read -r -d '' file; do
+      [ "$root/$file" = "$out" ] && continue
+      rc=0
+      diff --no-index -- /dev/null "$file" || rc=$?
+      [ "$rc" -le 1 ] || exit "$rc"  # no-index returns 1 for a valid diff
+    done < "$untracked_list"
+  fi
+} > "$tmp"
+cat "$tmp" > "$out"
+printf 'wrote %s: %s mode, %s bytes\n' "$out" "$mode" "$(wc -c < "$out" | tr -d ' ')"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Extract a task brief and report current HEAD as a possible review baseline.
+# This helper does not create commits or establish task completion.
+#
+# Usage: task-start PLAN_FILE TASK_NUMBER
+# Prints:
+#   brief: <path to the task's brief file>
+#   base:  <full SHA of HEAD>
+set -euo pipefail
+
+if [ $# -ne 2 ]; then
+  echo "usage: task-start PLAN_FILE TASK_NUMBER" >&2
+  exit 2
+fi
+
+plan=$1
+n=$2
+sdd="$(cd "$(dirname "$0")/../../subagent-driven-development/scripts" && pwd)"
+
+out=$(bash "$sdd/task-brief" "$plan" "$n")
+brief=$(printf '%s\n' "$out" | sed -n 's/^wrote \(.*\): [0-9][0-9]* lines$/\1/p')
+[ -n "$brief" ] || { echo "task-brief did not report a path: $out" >&2; exit 1; }
+
+echo "brief: $brief"
+echo "base: $(git rev-parse HEAD)"
