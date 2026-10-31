@@ -24,6 +24,27 @@ Superpowers Light는 [obra/superpowers](https://github.com/obra/superpowers)를 
 - 리뷰 의견은 근거에 따라 바로 판단합니다. 재시도 횟수를 채워도 중요한 미해결 문제가 완료 상태가 되지는 않습니다.
 - 유용한 회귀 테스트는 보존합니다. 임시 산출물 정리는 사용자·프로젝트 지침을 따르며, 공개 버전에는 새 테스트 파일을 일괄 삭제하는 규칙이 없습니다.
 
+## 원본 Superpowers와 다른 점
+
+[obra/superpowers 7.0.1](https://github.com/obra/superpowers/tree/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b) (커밋 `2ce8aa1`)과 비교했습니다.
+
+| 항목 | Superpowers 7.0.1 | Superpowers Light |
+| --- | --- | --- |
+| 진입 스킬 | 세션을 시작할 때마다 SessionStart 훅이 `using-superpowers`를 넣습니다. 스킬이 맞을 가능성이 1%만 있어도 반드시 호출하라는 규칙입니다. | `using-superpowers-light`는 직접 부를 때만 실행됩니다(`allow_implicit_invocation: false`). 훅이 없고, 맞는 가장 작은 절차를 고릅니다. |
+| 스킬이 켜지는 조건 | 넓습니다. 창작 작업 전에는 brainstorming, 모든 기능과 버그 수정 전에는 TDD, 모든 버그에는 debugging. | 불확실성과 위험으로 좁혔습니다. 정해지지 않은 결정, 원인이 불명확한 실패, 단순하지 않은 로직, 위험한 변경. |
+| 브레인스토밍 | 구현 전에 반드시 거치는 관문이고, 설계를 `docs/superpowers/specs/`에 저장해 커밋합니다. | 동작, 범위, 위험을 바꾸는 결정만 묻습니다. 설계 문서는 복잡하거나 인계가 필요할 때만 쓰고, 허락 없이 커밋하지 않습니다. |
+| 계획 | `docs/superpowers/plans/`에 정해진 머리말과 함께 저장합니다. | 작은 계획은 채팅에 둡니다. 복잡한 작업, 이어서 할 작업, 인계, 요청이 있을 때만 파일로 씁니다. |
+| TDD | 철칙: 테스트보다 먼저 쓴 코드는 지우고 다시 시작합니다. | 실패하는 테스트가 도움이 될 때 씁니다. 순서를 지키려고 기존 코드를 지우지 않고, 대신 회귀 확인을 더합니다. |
+| 스킬 작성 | TDD와 같은 지우고 다시 시작 규칙. | 그 규칙이 없습니다. 드러난 문제를 고치고 다시 확인합니다. |
+| 서브에이전트 | 작업마다 새 구현 에이전트와 명세, 품질 리뷰를 붙입니다. | 속도, 맥락 관리, 확신이 실제로 나아질 때만 나누고 리뷰합니다. |
+| 워크트리 | 기능 작업이나 계획 실행 전에 격리된 워크트리를 만듭니다. | 기본은 지금 작업 폴더입니다. 요청했거나 합의된 절차일 때만 워크트리를 씁니다. |
+| 코드 리뷰 | 작업이 끝날 때, 큰 기능 뒤, 병합 전에 커밋 범위로 합니다. | 위험, 불확실성, 사용자나 프로젝트 요구가 있을 때 합니다. 커밋하지 않은 변경(staged, unstaged, 관련 untracked 파일)도 리뷰합니다. |
+| Git과 게시 | 스킬 안에 브랜치, 커밋, PR을 만드는 단계가 있습니다. | 스킬은 허락으로 치지 않습니다. 브랜치, 커밋, 푸시, 병합, 게시는 사용자 요청이나 합의된 절차가 있어야 합니다. |
+| 시각 도우미 | 로고를 원격 주소에서 불러옵니다. | 로컬 텍스트 브랜딩만 쓰고 원격 요청이 없습니다. |
+| 뺀 것 | | `diagnosing-superpowers` 스킬, SessionStart 훅, 에이전트 환경별 플러그인 설정, 원본 테스트와 문서. |
+| 설치 | 에이전트 환경마다 플러그인이나 확장으로 설치합니다. | `python3 scripts/install.py`가 스킬 폴더를 `~/.codex/skills`에 복사하고, 이미 있는 스킬은 덮어쓰지 않습니다. |
+| 분량 | 공통 스킬 14개의 `SKILL.md` 약 20,700단어. | 약 7,900단어(약 38%). |
+
 ## 지원 범위와 준비 사항
 
 수정된 절차는 주로 로컬 Codex에서 확인했습니다. 이 저장소는 스킬 모음이며 공식 Codex 플러그인이나 마켓플레이스 패키지가 아닙니다. 다른 에이전트 환경의 호환성은 검증하지 않았으며, 포함된 환경별 참조 문서도 호환성을 보장하지 않습니다.
@@ -35,7 +56,7 @@ Superpowers Light는 [obra/superpowers](https://github.com/obra/superpowers)를 
 저장소 내용과 기존 스킬을 확인한 뒤 실행하세요.
 
 ```bash
-git clone https://github.com/qkrwoghd04/superpowers-light.git
+git clone https://github.com/2lazzzy/superpowers-light.git
 cd superpowers-light
 python3 scripts/install.py --dry-run
 python3 scripts/install.py

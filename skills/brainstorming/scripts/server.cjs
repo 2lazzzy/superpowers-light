@@ -228,7 +228,7 @@ function brandMarkup() {
   const version = SUPERPOWERS_LIGHT_VERSION === 'unknown'
     ? ''
     : ' v' + escapeHtmlText(SUPERPOWERS_LIGHT_VERSION);
-  return '<div class="brand"><a href="https://github.com/qkrwoghd04/superpowers-light"><span class="brand-copy">Superpowers Light' + version + '</span></a></div>';
+  return '<div class="brand"><a href="https://github.com/2lazzzy/superpowers-light"><span class="brand-copy">Superpowers Light' + version + '</span></a></div>';
 }
 
 function renderBranding(html) {
