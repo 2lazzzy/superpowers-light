@@ -102,7 +102,7 @@ const URL_HOST = process.env.BRAINSTORM_URL_HOST || (HOST === '127.0.0.1' ? 'loc
 const SESSION_DIR = process.env.BRAINSTORM_DIR || '/tmp/brainstorm';
 const CONTENT_DIR = path.join(SESSION_DIR, 'content');
 const STATE_DIR = path.join(SESSION_DIR, 'state');
-const SUPERPOWER_LIGHT_VERSION = readPackageVersion();
+const SUPERPOWERS_LIGHT_VERSION = readPackageVersion();
 let ownerPid = process.env.BRAINSTORM_OWNER_PID ? Number(process.env.BRAINSTORM_OWNER_PID) : null;
 
 // Per-session secret key. The companion is reachable by any local browser tab
@@ -154,7 +154,7 @@ const MIME_TYPES = {
 function waitingPage() {
   return renderBranding(`<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>Superpower Light Companion</title>
+<head><meta charset="utf-8"><title>Superpowers Light Companion</title>
 <style>
 body { font-family: system-ui, sans-serif; padding: 2rem; max-width: 800px; margin: 0 auto; }
 h1 { color: #333; } p { color: #666; }
@@ -163,7 +163,7 @@ h1 { color: #333; } p { color: #666; }
 .brand-copy { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1; transform: translateY(-1px); }
 </style>
 </head>
-<body><!-- BRANDING --><h1>Superpower Light Companion</h1>
+<body><!-- BRANDING --><h1>Superpowers Light Companion</h1>
 <p>Waiting for the agent to push a screen...</p></body></html>`);
 }
 
@@ -181,7 +181,7 @@ function bootstrapPage(key) {
   const jsonKey = JSON.stringify(String(key));
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>Opening Superpower Light Companion</title></head>
+<head><meta charset="utf-8"><title>Opening Superpowers Light Companion</title></head>
 <body>
 <script>
 try { sessionStorage.setItem('brainstorm-session-key', ${jsonKey}); } catch (e) {}
@@ -225,10 +225,10 @@ function escapeHtmlText(value) {
 }
 
 function brandMarkup() {
-  const version = SUPERPOWER_LIGHT_VERSION === 'unknown'
+  const version = SUPERPOWERS_LIGHT_VERSION === 'unknown'
     ? ''
-    : ' v' + escapeHtmlText(SUPERPOWER_LIGHT_VERSION);
-  return '<div class="brand"><a href="https://github.com/qkrwoghd04/superpower-light"><span class="brand-copy">Superpower Light' + version + '</span></a></div>';
+    : ' v' + escapeHtmlText(SUPERPOWERS_LIGHT_VERSION);
+  return '<div class="brand"><a href="https://github.com/qkrwoghd04/superpowers-light"><span class="brand-copy">Superpowers Light' + version + '</span></a></div>';
 }
 
 function renderBranding(html) {

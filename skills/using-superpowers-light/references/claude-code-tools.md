@@ -2,7 +2,7 @@
 
 Use the tools, model choices, and delegation capabilities actually available in the current session. Tool names and nesting limits can vary by version or installation; a platform example is not permission to change configuration.
 
-For a selected skill, use the installed skill loader or read its `SKILL.md`. Do not assume this repository installs a session-start hook or automatically invokes `using-superpowers`.
+For a selected skill, use the installed skill loader or read its `SKILL.md`. Do not assume this repository installs a session-start hook or automatically invokes `using-superpowers-light`.
 
 ## Optional orchestration
 

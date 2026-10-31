@@ -1,8 +1,8 @@
-# Superpower Light
+# Superpowers Light
 
 [한국어](README.ko.md)
 
-Superpower Light is an independent, MIT-licensed derivative of [obra/superpowers](https://github.com/obra/superpowers). It contains 14 revised skills for coding agents, with narrower activation criteria and workflows sized to the uncertainty and impact of the work.
+Superpowers Light is an independent, MIT-licensed derivative of [obra/superpowers](https://github.com/obra/superpowers). It contains 14 revised skills for coding agents, with narrower activation criteria and workflows sized to the uncertainty and impact of the work.
 
 The changes live in the skill instructions, references, prompts, and helper scripts themselves. This is more than a separate preferences file layered over the original skills.
 
@@ -35,8 +35,8 @@ Installation needs Python 3.8 or newer; the clone command below also needs Git. 
 Review the repository and any existing skills first, then run:
 
 ```bash
-git clone https://github.com/qkrwoghd04/superpower-light.git
-cd superpower-light
+git clone https://github.com/qkrwoghd04/superpowers-light.git
+cd superpowers-light
 python3 scripts/install.py --dry-run
 python3 scripts/install.py
 ```
@@ -64,10 +64,10 @@ Updates follow the same approach: review the changes, move the installed copies 
 
 ## Use
 
-`using-superpowers` is explicitly invoked in Codex through `agents/openai.yaml` with `allow_implicit_invocation: false`. It selects a suitable workflow; invoking it does not request all 14 skills.
+`using-superpowers-light` is explicitly invoked in Codex through `agents/openai.yaml` with `allow_implicit_invocation: false`. It selects a suitable workflow; invoking it does not request all 14 skills.
 
 ```text
-$using-superpowers Help me choose a workflow for adding invite expiry.
+$using-superpowers-light Help me choose a workflow for adding invite expiry.
 ```
 
 Other skills keep normal matching with narrower descriptions. You can also name a relevant skill directly:
@@ -82,7 +82,7 @@ No global preferences file is required. Your project's instructions, explicit re
 
 | Skill | Use |
 | --- | --- |
-| [using-superpowers](skills/using-superpowers/SKILL.md) | Explicit workflow selection. |
+| [using-superpowers-light](skills/using-superpowers-light/SKILL.md) | Explicit workflow selection. |
 | [brainstorming](skills/brainstorming/SKILL.md) | Unresolved requirements and consequential design choices. |
 | [writing-plans](skills/writing-plans/SKILL.md) | Detailed plans when complexity, resumption, or handoff needs them. |
 | [executing-plans](skills/executing-plans/SKILL.md) | Direct execution of agreed work in the current session. |

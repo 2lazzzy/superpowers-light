@@ -1,5 +1,5 @@
 ---
-name: using-superpowers
+name: using-superpowers-light
 description: Select an appropriate Superpowers workflow when the user explicitly requests Superpowers guidance.
 ---
 

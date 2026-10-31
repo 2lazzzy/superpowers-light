@@ -1,5 +1,5 @@
-Superpower Light
-https://github.com/qkrwoghd04/superpower-light
+Superpowers Light
+https://github.com/qkrwoghd04/superpowers-light
 
 An independently maintained derivative of Superpowers by Jesse Vincent and
 the Superpowers contributors: https://github.com/obra/superpowers
@@ -14,7 +14,7 @@ Source baseline:
   https://github.com/obra/superpowers/tree/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
 
 The 64 original skill/resource files were compared byte-for-byte against this
-baseline before modification. Superpower Light revises all 14 skill entrypoints
+baseline before modification. Superpowers Light revises all 14 skill entrypoints
 and selected references/helpers to make process proportional to uncertainty
 and risk, support uncommitted-change review, and preserve user authorization.
 Public defaults retain project regression tests; temporary artifact cleanup

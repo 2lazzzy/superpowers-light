@@ -24,7 +24,7 @@ When a skill mentions "your instructions file", on Muse this is **`CLAUDE.md`** 
 
 ## Skill invocation
 
-Use the installed skill loader when available, or read the selected skill's `SKILL.md` from its actual installation location. Do not assume this repository installs a session-start hook. `using-superpowers` remains an explicitly requested workflow selector; other skills are selected when their scope applies.
+Use the installed skill loader when available, or read the selected skill's `SKILL.md` from its actual installation location. Do not assume this repository installs a session-start hook. `using-superpowers-light` remains an explicitly requested workflow selector; other skills are selected when their scope applies.
 
 ## Subagent dispatch
 

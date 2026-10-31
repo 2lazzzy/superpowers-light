@@ -1,8 +1,8 @@
-# Superpower Light
+# Superpowers Light
 
 [English](README.md)
 
-Superpower Light는 [obra/superpowers](https://github.com/obra/superpowers)를 기반으로 독립적으로 수정한 MIT 라이선스 프로젝트입니다. 코딩 에이전트용 스킬 14개를 담고 있으며, 적용 조건을 좁히고 작업의 불확실성과 영향에 맞춰 절차를 선택하도록 바꿨습니다.
+Superpowers Light는 [obra/superpowers](https://github.com/obra/superpowers)를 기반으로 독립적으로 수정한 MIT 라이선스 프로젝트입니다. 코딩 에이전트용 스킬 14개를 담고 있으며, 적용 조건을 좁히고 작업의 불확실성과 영향에 맞춰 절차를 선택하도록 바꿨습니다.
 
 변경 사항은 각 스킬의 지침, 참조 문서, 프롬프트, 보조 스크립트에 직접 반영되어 있습니다. 원본 위에 별도의 사용자 선호 파일만 덧붙인 구성이 아닙니다.
 
@@ -35,8 +35,8 @@ Superpower Light는 [obra/superpowers](https://github.com/obra/superpowers)를 �
 저장소 내용과 기존 스킬을 확인한 뒤 실행하세요.
 
 ```bash
-git clone https://github.com/qkrwoghd04/superpower-light.git
-cd superpower-light
+git clone https://github.com/qkrwoghd04/superpowers-light.git
+cd superpowers-light
 python3 scripts/install.py --dry-run
 python3 scripts/install.py
 ```
@@ -64,10 +64,10 @@ python3 scripts/install.py --dest /path/to/skills
 
 ## 사용
 
-`using-superpowers`는 Codex의 `agents/openai.yaml`에 `allow_implicit_invocation: false`가 설정되어 있어 명시적으로 호출합니다. 적절한 절차를 선택하는 진입점이며, 호출한다고 14개 스킬을 모두 실행하지는 않습니다.
+`using-superpowers-light`는 Codex의 `agents/openai.yaml`에 `allow_implicit_invocation: false`가 설정되어 있어 명시적으로 호출합니다. 적절한 절차를 선택하는 진입점이며, 호출한다고 14개 스킬을 모두 실행하지는 않습니다.
 
 ```text
-$using-superpowers 초대 링크 만료 기능에 맞는 작업 절차를 골라줘.
+$using-superpowers-light 초대 링크 만료 기능에 맞는 작업 절차를 골라줘.
 ```
 
 다른 스킬은 적용 조건을 좁힌 설명에 따라 일반적인 매칭을 유지합니다. 필요한 스킬을 직접 지정할 수도 있습니다.
@@ -82,7 +82,7 @@ $systematic-debugging 이 테스트가 간헐적으로 실패하는 원인을 �
 
 | 스킬 | 용도 |
 | --- | --- |
-| [using-superpowers](skills/using-superpowers/SKILL.md) | 명시적으로 요청한 작업 절차 선택. |
+| [using-superpowers-light](skills/using-superpowers-light/SKILL.md) | 명시적으로 요청한 작업 절차 선택. |
 | [brainstorming](skills/brainstorming/SKILL.md) | 미정 요구사항과 영향이 큰 설계 선택 검토. |
 | [writing-plans](skills/writing-plans/SKILL.md) | 복잡한 작업·재개·인계에 필요한 상세 계획. |
 | [executing-plans](skills/executing-plans/SKILL.md) | 합의된 작업을 현재 세션에서 직접 실행. |

@@ -33,7 +33,7 @@ skill_view("test-driven-development")
 ```
 
 If `skill_view` cannot find a selected skill, locate the actual installed
-Superpower Light skill directory and read its `SKILL.md` directly. Do not
+Superpowers Light skill directory and read its `SKILL.md` directly. Do not
 assume an upstream plugin directory or registration hook exists. Use the
 current session's tool schema for file access and delegation.
 
